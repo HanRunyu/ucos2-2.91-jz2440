@@ -1,0 +1,700 @@
+/**************************************************************************
+*                                                                         *
+*   PROJECT     : ARM port for UCOS-II                                    *
+*                                                                         *
+*   MODULE      : S3C2440.a                                               *
+*                                                                         *
+*	AUTHOR		: HanRunyu												  *
+*				  URL  : http://github.com/HanRunyu 					  *
+*																		  *
+*	PROCESSOR	: s3c2440  (32 bit ARM920T RISC core from Samsung)		  *
+*																		  *
+*	TOOLCHAIN	: arm-linux-gnueabi-gcc(Linaro 7.5.0)					  *
+*                                                                         *
+*   DESCRIPTION :                                                         *
+*   s3c2440  register address definition (Assembly).                      *
+*                                                                         *
+**************************************************************************/
+
+
+
+@=================
+@ Memory control 
+@=================
+	.equ	BWSCON       ,0x48000000     @Bus width & wait status
+	.equ	BANKCON0     ,0x48000004     @Boot ROM control
+	.equ	BANKCON1     ,0x48000008     @BANK1 control
+	.equ	BANKCON2     ,0x4800000c     @BANK2 cControl
+	.equ	BANKCON3     ,0x48000010     @BANK3 control
+	.equ	BANKCON4     ,0x48000014     @BANK4 control
+	.equ	BANKCON5     ,0x48000018     @BANK5 control
+	.equ	BANKCON6     ,0x4800001c     @BANK6 control
+	.equ	BANKCON7     ,0x48000020     @BANK7 control
+	.equ	REFRESH      ,0x48000024     @DRAM/SDRAM refresh
+	.equ	BANKSIZE     ,0x48000028     @Flexible Bank Size
+	.equ	MRSRB6       ,0x4800002c     @Mode register set for SDRAM
+	.equ	MRSRB7       ,0x48000030     @Mode register set for SDRAM
+
+
+@=================
+@ USB Host
+@=================
+	.equ	HcRevision          	,0x49000000 		@Control and status group
+	.equ	HcControl           	,0x49000004 		@
+	.equ	HcCommonStatus      	,0x49000008 		@
+	.equ	HcInterruptStatus   	,0x4900000c 		@
+	.equ	HcInterruptEnable   	,0x49000010 		@
+	.equ	HcInterruptDisable  	,0x49000014 		@
+	.equ	HcHCCA              	,0x49000018 		@Memory pointer group
+	.equ	HcPeriodCuttentED   	,0x4900001c 		@
+	.equ	HcControlHeadED     	,0x49000020 		@
+	.equ	HcControlCurrentED  	,0x49000024 		@
+	.equ	HcBulkHeadED			,0x49000028 		@
+	.equ	HcBulkCurrentED     	,0x4900002c 		@
+	.equ	HcDoneHead          	,0x49000030 		@Frame counter group
+	.equ	HcRmInterval        	,0x49000034 		@
+	.equ	HcFmRemaining       	,0x49000038 		@
+	.equ	HcFmNumber          	,0x4900003c 		@
+	.equ	HcPeriodicStart     	,0x49000040 		@
+	.equ	HcLSThreshold       	,0x49000044 		@
+	.equ	HcRhDescriptorA     	,0x49000048 		@Root hub group
+	.equ	HcRhDescriptorB     	,0x4900004c 		@
+	.equ	HcRhStatus          	,0x49000050 		@
+	.equ	HcRhPortStatus1			,0x49000054 		@
+	.equ	HcRhPortStatus2			,0x49000058 		@
+
+
+@=================
+@ INTERRUPT
+@=================
+	.equ	SRCPND         ,0x4a000000    @Interrupt request status
+	.equ	INTMOD         ,0x4a000004    @Interrupt mode control
+	.equ	INTMSK         ,0x4a000008    @Interrupt mask control
+	.equ	PRIORITY       ,0x4a00000c    @IRQ priority control
+	.equ	INTPND         ,0x4a000010    @Interrupt request status
+	.equ	INTOFFSET      ,0x4a000014    @Interruot request source offset
+	.equ	SUSSRCPND      ,0x4a000018    @Sub source pending
+	.equ	INTSUBMSK      ,0x4a00001c    @Interrupt sub mask
+
+
+@=================
+@ DMA
+@=================
+	.equ	DISRC0         ,0x4b000000    @DMA 0 Initial source
+	.equ	DISRCC0        ,0x4b000004    @DMA 0 Initial source control
+	.equ	DIDST0         ,0x4b000008    @DMA 0 Initial Destination
+	.equ	DIDSTC0        ,0x4b00000c    @DMA 0 Initial Destination control
+	.equ	DCON0          ,0x4b000010    @DMA 0 Control
+	.equ	DSTAT0         ,0x4b000014    @DMA 0 Status
+	.equ	DCSRC0         ,0x4b000018    @DMA 0 Current source
+	.equ	DCDST0         ,0x4b00001c    @DMA 0 Current destination
+	.equ	DMASKTRIG0     ,0x4b000020    @DMA 0 Mask trigger
+
+	.equ	DISRC1         ,0x4b000040    @DMA 1 Initial source
+	.equ	DISRCC1        ,0x4b000044    @DMA 1 Initial source control
+	.equ	DIDST1         ,0x4b000048    @DMA 1 Initial Destination
+	.equ	DIDSTC1        ,0x4b00004c    @DMA 1 Initial Destination control
+	.equ	DCON1          ,0x4b000050    @DMA 1 Control
+	.equ	DSTAT1         ,0x4b000054    @DMA 1 Status
+	.equ	DCSRC1         ,0x4b000058    @DMA 1 Current source
+	.equ	DCDST1         ,0x4b00005c    @DMA 1 Current destination
+	.equ	DMASKTRIG1     ,0x4b000060    @DMA 1 Mask trigger
+
+	.equ	DISRC2         ,0x4b000080    @DMA 2 Initial source
+	.equ	DISRCC2        ,0x4b000084    @DMA 2 Initial source control
+	.equ	DIDST2         ,0x4b000088    @DMA 2 Initial Destination
+	.equ	DIDSTC2        ,0x4b00008c    @DMA 2 Initial Destination control
+	.equ	DCON2          ,0x4b000090    @DMA 2 Control
+	.equ	DSTAT2         ,0x4b000094    @DMA 2 Status
+	.equ	DCSRC2         ,0x4b000098    @DMA 2 Current source
+	.equ	DCDST2         ,0x4b00009c    @DMA 2 Current destination
+	.equ	DMASKTRIG2     ,0x4b0000a0    @DMA 2 Mask trigger
+
+	.equ	DISRC3         ,0x4b0000c0    @DMA 3 Initial source
+	.equ	DISRCC3        ,0x4b0000c4    @DMA 3 Initial source control
+	.equ	DIDST3         ,0x4b0000c8    @DMA 3 Initial Destination
+	.equ	DIDSTC3        ,0x4b0000cc    @DMA 3 Initial Destination control
+	.equ	DCON3          ,0x4b0000d0    @DMA 3 Control
+	.equ	DSTAT3         ,0x4b0000d4    @DMA 3 Status
+	.equ	DCSRC3         ,0x4b0000d8    @DMA 3 Current source
+	.equ	DCDST3         ,0x4b0000dc    @DMA 3 Current destination
+	.equ	DMASKTRIG3     ,0x4b0000e0    @DMA 3 Mask trigger
+
+
+@==========================
+@ CLOCK & POWER MANAGEMENT
+@==========================
+	.equ	LOCKTIME      ,0x4c000000     @PLL lock time counter
+	.equ	MPLLCON       ,0x4c000004     @MPLL Control
+	.equ	UPLLCON       ,0x4c000008     @UPLL Control
+	.equ	CLKCON        ,0x4c00000c     @Clock generator control
+	.equ	CLKSLOW       ,0x4c000010     @Slow clock control
+	.equ	CLKDIVN       ,0x4c000014     @Clock divider control
+	.equ	CAMDIVN		  ,0x4c000018  	 @Camera clock divider control
+
+
+@=================
+@ LCD CONTROLLER
+@=================
+	.equ	LCDCON1       ,0x4d000000     @LCD control 1
+	.equ	LCDCON2       ,0x4d000004     @LCD control 2
+	.equ	LCDCON3       ,0x4d000008     @LCD control 3
+	.equ	LCDCON4       ,0x4d00000c     @LCD control 4
+	.equ	LCDCON5       ,0x4d000010     @LCD control 5
+	.equ	LCDSADDR1     ,0x4d000014     @STN/TFT Frame buffer start address 1
+	.equ	LCDSADDR2     ,0x4d000018     @STN/TFT Frame buffer start address 2
+	.equ	LCDSADDR3     ,0x4d00001c     @STN/TFT Virtual screen address set
+	.equ	REDLUT        ,0x4d000020     @STN Red lookup table
+	.equ	GREENLUT      ,0x4d000024     @STN Green lookup table 
+	.equ	BLUELUT       ,0x4d000028     @STN Blue lookup table
+	.equ	DITHMODE      ,0x4d00004c     @STN Dithering mode
+	.equ	TPAL          ,0x4d000050     @TFT Temporary palette
+	.equ	LCDINTPND     ,0x4d000054     @LCD Interrupt pending
+	.equ	LCDSRCPND     ,0x4d000058     @LCD Interrupt source
+	.equ	LCDINTMSK     ,0x4d00005c     @LCD Interrupt mask
+	.equ	LPCSEL        ,0x4d000060     @LPC3600 Control
+
+
+@=================
+@ NAND flash
+@=================
+	.equ	NFCONF   	  ,0x4e000000 	@NAND Flash configuration
+	.equ	NFCONT		  ,0x4e000004 	@NAND flash control
+	.equ	NFCMD     	  ,0x4e000008	@NADD Flash command
+	.equ	NFADDR    	  ,0x4e00000c   @NAND Flash address
+	.equ	NFDATA    	  ,0x4e000010   @NAND Flash data
+	.equ	NFMECCD0   	  ,0x4e000014 	@NAND flash main area ECC0/1
+	.equ	NFMECCD1	  ,0x4e000018 	@NAND flash main area ECC2/3
+	.equ	NFSECCD		  ,0x4e00001c 	@NAND flash spare area ECC
+	.equ	NFSTAT    	  ,0x4e000020 	@NAND Flash operation status
+	.equ	NFESTAT0	  ,0x4e000024 	@NAND flash ECC status for I/O[7:0]
+	.equ	NFESTAT1	  ,0x4e000028 	@NAND flash ECC status for I/O[15:8]
+	.equ	NFMECC0		  ,0x4e00002c 	@NAND flash main area ECC0 status
+	.equ	NFMECC1		  ,0x4e000030 	@NAND flash main area ECC1 status
+	.equ	NFSECC		  ,0x4e000034 	@NAND flash spare area ECC status
+	.equ	NFSBLK		  ,0x4e000038 	@NAND flash start block address
+	.equ	NFEBLK		  ,0x4e00003c 	@NAND flash end block address
+
+
+@=================
+@ Camera Interface
+@=================
+	.equ	CISRCFMT		  ,0x4f000000 	@Input source format                                
+	.equ	CIWDOFST       	  ,0x4f000004 	@Window offset register                             
+	.equ	CIGCTRL        	  ,0x4f000008 	@Global control register                            
+	.equ	CICOYSA1       	  ,0x4f000018 	@Y 1st frame start address for codec DMA            
+	.equ	CICOYSA2       	  ,0x4f00001c 	@Y 2nd frame start address for codec DMA            
+	.equ	CICOYSA3       	  ,0x4f000020 	@Y 3nd frame start address for codec DMA            
+	.equ	CICOYSA4       	  ,0x4f000024 	@Y 4th frame start address for codec DMA            
+	.equ	CICOCBSA1      	  ,0x4f000028 	@Cb 1st frame start address for codec DMA           
+	.equ	CICOCBSA2      	  ,0x4f00002c 	@Cb 2nd frame start address for codec DMA           
+	.equ	CICOCBSA3      	  ,0x4f000030 	@Cb 3nd frame start address for codec DMA           
+	.equ	CICOCBSA4      	  ,0x4f000034 	@Cb 4th frame start address for codec DMA           
+	.equ	CICOCRSA1      	  ,0x4f000038 	@Cr 1st frame start address for codec DMA           
+	.equ	CICOCRSA2      	  ,0x4f00003c 	@Cr 2nd frame start address for codec DMA           
+	.equ	CICOCRSA3      	  ,0x4f000040 	@Cr 3nd frame start address for codec DMA           
+	.equ	CICOCRSA4      	  ,0x4f000044 	@Cr 4th frame start address for codec DMA           
+	.equ	CICOTRGFMT     	  ,0x4f000048 	@Target image format of codec DMA                   
+	.equ	CICOCTRL       	  ,0x4f00004c 	@Codec DMA control related                          
+	.equ	CICOSCPRERATIO 	  ,0x4f000050 	@Codec pre-scaler ratio control                     
+	.equ	CICOSCPREDST   	  ,0x4f000054 	@Codec pre-scaler destination format                
+	.equ	CICOSCCTRL     	  ,0x4f000058 	@Codec main-scaler control                          
+	.equ	CICOTAREA      	  ,0x4f00005c 	@Codec scaler target area                           
+	.equ	CICOSTATUS     	  ,0x4f000064 	@Codec path status                                  
+	.equ	CIPRCLRSA1     	  ,0x4f00006c 	@RGB 1st frame start address for preview DMA        
+	.equ	CIPRCLRSA2     	  ,0x4f000070 	@RGB 2nd frame start address for preview DMA        
+	.equ	CIPRCLRSA3     	  ,0x4f000074 	@RGB 3nd frame start address for preview DMA        
+	.equ	CIPRCLRSA4     	  ,0x4f000078 	@RGB 4th frame start address for preview DMA        
+	.equ	CIPRTRGFMT     	  ,0x4f00007c 	@Target image format of preview DMA                 
+	.equ	CIPRCTRL       	  ,0x4f000080 	@Preview DMA control related                        
+	.equ	CIPRSCPRERATIO 	  ,0x4f000084 	@Preview pre-scaler ratio control                   
+	.equ	CIPRSCPREDST   	  ,0x4f000088 	@Preview pre-scaler destination format              
+	.equ	CIPRSCCTRL     	  ,0x4f00008c 	@Preview main-scaler control                        
+	.equ	CIPRTAREA      	  ,0x4f000090 	@Preview scaler target area                         
+	.equ	CIPRSTATUS     	  ,0x4f000098 	@Preview path status                                
+	.equ	CIIMGCPT       	  ,0x4f0000a0 	@Image capture enable command   
+
+
+@=================
+@ UART
+@=================
+	.equ	ULCON0         ,0x50000000    @UART 0 Line control
+	.equ	UCON0          ,0x50000004    @UART 0 Control
+	.equ	UFCON0         ,0x50000008    @UART 0 FIFO control
+	.equ	UMCON0         ,0x5000000c    @UART 0 Modem control
+	.equ	UTRSTAT0       ,0x50000010    @UART 0 Tx/Rx status
+	.equ	UERSTAT0       ,0x50000014    @UART 0 Rx error status
+	.equ	UFSTAT0        ,0x50000018    @UART 0 FIFO status
+	.equ	UMSTAT0        ,0x5000001c    @UART 0 Modem status
+	.equ	UBRDIV0        ,0x50000028    @UART 0 Baud rate divisor
+
+	.equ	ULCON1         ,0x50004000    @UART 1 Line control
+	.equ	UCON1          ,0x50004004    @UART 1 Control
+	.equ	UFCON1         ,0x50004008    @UART 1 FIFO control
+	.equ	UMCON1         ,0x5000400c    @UART 1 Modem control
+	.equ	UTRSTAT1       ,0x50004010    @UART 1 Tx/Rx status
+	.equ	UERSTAT1       ,0x50004014    @UART 1 Rx error status
+	.equ	UFSTAT1        ,0x50004018    @UART 1 FIFO status
+	.equ	UMSTAT1        ,0x5000401c    @UART 1 Modem status
+	.equ	UBRDIV1        ,0x50004028    @UART 1 Baud rate divisor
+
+	.equ	ULCON2         ,0x50008000    @UART 2 Line control
+	.equ	UCON2          ,0x50008004    @UART 2 Control
+	.equ	UFCON2         ,0x50008008    @UART 2 FIFO control
+	.equ	UMCON2         ,0x5000800c    @UART 2 Modem control
+	.equ	UTRSTAT2       ,0x50008010    @UART 2 Tx/Rx status
+	.equ	UERSTAT2       ,0x50008014    @UART 2 Rx error status
+	.equ	UFSTAT2        ,0x50008018    @UART 2 FIFO status
+	.equ	UMSTAT2        ,0x5000801c    @UART 2 Modem status
+	.equ	UBRDIV2        ,0x50008028    @UART 2 Baud rate divisor
+
+	.ifdef __BIG_ENDIAN
+		.equ	UTXH0          ,0x50000023    @UART 0 Transmission Hold
+		.equ	URXH0          ,0x50000027    @UART 0 Receive buffer
+		.equ	UTXH1          ,0x50004023    @UART 1 Transmission Hold
+		.equ	URXH1          ,0x50004027    @UART 1 Receive buffer
+		.equ	UTXH2          ,0x50008023    @UART 2 Transmission Hold
+		.equ	URXH2          ,0x50008027    @UART 2 Receive buffer
+	.else                    @Little Endian
+		.equ	UTXH0          ,0x50000020    @UART 0 Transmission Hold
+		.equ	URXH0          ,0x50000024    @UART 0 Receive buffer
+		.equ	UTXH1          ,0x50004020    @UART 1 Transmission Hold
+		.equ	URXH1          ,0x50004024    @UART 1 Receive buffer
+		.equ	UTXH2          ,0x50008020    @UART 2 Transmission Hold
+		.equ	URXH2          ,0x50008024    @UART 2 Receive buffer
+    .endif
+
+
+@=================
+@ PWM TIMER
+@=================
+	.equ	TCFG0      ,0x51000000        @Timer 0 configuration
+	.equ	TCFG1      ,0x51000004        @Timer 1 configuration
+	.equ	TCON       ,0x51000008        @Timer control
+	.equ	TCNTB0     ,0x5100000c        @Timer count buffer 0
+	.equ	TCMPB0     ,0x51000010        @Timer compare buffer 0
+	.equ	TCNTO0     ,0x51000014        @Timer count observation 0
+	.equ	TCNTB1     ,0x51000018        @Timer count buffer 1
+	.equ	TCMPB1     ,0x5100001c        @Timer compare buffer 1
+	.equ	TCNTO1     ,0x51000020        @Timer count observation 1
+	.equ	TCNTB2     ,0x51000024        @Timer count buffer 2
+	.equ	TCMPB2     ,0x51000028        @Timer compare buffer 2
+	.equ	TCNTO2     ,0x5100002c        @Timer count observation 2
+	.equ	TCNTB3     ,0x51000030        @Timer count buffer 3
+	.equ	TCMPB3     ,0x51000034        @Timer compare buffer 3
+	.equ	TCNTO3     ,0x51000038        @Timer count observation 3
+	.equ	TCNTB4     ,0x5100003c        @Timer count buffer 4
+	.equ	TCNTO4     ,0x51000040        @Timer count observation 4
+
+
+@=================
+@ USB DEVICE
+@=================
+    .ifdef __BIG_ENDIAN
+		.equ	FUNC_ADDR_REG        ,0x52000143     @Function address
+		.equ	PWR_REG              ,0x52000147     @Power management
+		.equ	EP_INT_REG           ,0x5200014b     @EP Interrupt pending and clear
+		.equ	USB_INT_REG          ,0x5200015b     @USB Interrupt pending and clear
+		.equ	EP_INT_EN_REG        ,0x5200015f     @Interrupt enable
+		.equ	USB_INT_EN_REG       ,0x5200016f
+		.equ	FRAME_NUM1_REG       ,0x52000173     @Frame number lower byte
+		.equ	FRAME_NUM2_REG       ,0x52000177     @Frame number lower byte
+		.equ	INDEX_REG            ,0x5200017b     @Register index
+		.equ	MAXP_REG             ,0x52000183     @Endpoint max packet
+		.equ	EP0_CSR              ,0x52000187     @Endpoint 0 status
+		.equ	IN_CSR1_REG          ,0x52000187     @In endpoint control status
+		.equ	IN_CSR2_REG          ,0x5200018b
+		.equ	OUT_CSR1_REG         ,0x52000193     @Out endpoint control status
+		.equ	OUT_CSR2_REG         ,0x52000197
+		.equ	OUT_FIFO_CNT1_REG    ,0x5200019b     @Endpoint out write count
+		.equ	OUT_FIFO_CNT2_REG    ,0x5200019f
+		.equ	EP0_FIFO             ,0x520001c3     @Endpoint 0 FIFO
+		.equ	EP1_FIFO             ,0x520001c7     @Endpoint 1 FIFO
+		.equ	EP2_FIFO             ,0x520001cb     @Endpoint 2 FIFO
+		.equ	EP3_FIFO             ,0x520001cf     @Endpoint 3 FIFO
+		.equ	EP4_FIFO             ,0x520001d3     @Endpoint 4 FIFO
+		.equ	EP1_DMA_CON          ,0x52000203     @EP1 DMA interface control
+		.equ	EP1_DMA_UNIT         ,0x52000207     @EP1 DMA Tx unit counter
+		.equ	EP1_DMA_FIFO         ,0x5200020b     @EP1 DMA Tx FIFO counter
+		.equ	EP1_DMA_TTC_L        ,0x5200020f     @EP1 DMA total Tx counter
+		.equ	EP1_DMA_TTC_M        ,0x52000213
+		.equ	EP1_DMA_TTC_H        ,0x52000217
+		.equ	EP2_DMA_CON          ,0x5200021b     @EP2 DMA interface control
+		.equ	EP2_DMA_UNIT         ,0x5200021f     @EP2 DMA Tx unit counter
+		.equ	EP2_DMA_FIFO         ,0x52000223     @EP2 DMA Tx FIFO counter
+		.equ	EP2_DMA_TTC_L        ,0x52000227     @EP2 DMA total Tx counter
+		.equ	EP2_DMA_TTC_M        ,0x5200022b
+		.equ	EP2_DMA_TTC_H        ,0x5200022f
+		.equ	EP3_DMA_CON          ,0x52000243     @EP3 DMA interface control
+		.equ	EP3_DMA_UNIT         ,0x52000247     @EP3 DMA Tx unit counter
+		.equ	EP3_DMA_FIFO         ,0x5200024b     @EP3 DMA Tx FIFO counter
+		.equ	EP3_DMA_TTC_L        ,0x5200024f     @EP3 DMA total Tx counter
+		.equ	EP3_DMA_TTC_M        ,0x52000253
+		.equ	EP3_DMA_TTC_H        ,0x52000257
+		.equ	EP4_DMA_CON          ,0x5200025b     @EP4 DMA interface control
+		.equ	EP4_DMA_UNIT         ,0x5200025f     @EP4 DMA Tx unit counter
+		.equ	EP4_DMA_FIFO         ,0x52000263     @EP4 DMA Tx FIFO counter
+		.equ	EP4_DMA_TTC_L        ,0x52000267     @EP4 DMA total Tx counter
+		.equ	EP4_DMA_TTC_M        ,0x5200026b
+		.equ	EP4_DMA_TTC_H        ,0x5200026f
+    .else		   			@ Little Endian
+		.equ	FUNC_ADDR_REG        ,0x52000140     @Function address
+		.equ	PWR_REG              ,0x52000144     @Power management
+		.equ	EP_INT_REG           ,0x52000148     @EP Interrupt pending and clear
+		.equ	USB_INT_REG          ,0x52000158     @USB Interrupt pending and clear
+		.equ	EP_INT_EN_REG        ,0x5200015c     @Interrupt enable
+		.equ	USB_INT_EN_REG       ,0x5200016c
+		.equ	FRAME_NUM1_REG       ,0x52000170     @Frame number lower byte
+		.equ	FRAME_NUM2_REG       ,0x52000174     @Frame number lower byte
+		.equ	INDEX_REG            ,0x52000178     @Register index
+		.equ	MAXP_REG             ,0x52000180     @Endpoint max packet
+		.equ	EP0_CSR              ,0x52000184     @Endpoint 0 status
+		.equ	IN_CSR1_REG          ,0x52000184     @In endpoint control status
+		.equ	IN_CSR2_REG          ,0x52000188
+		.equ	OUT_CSR1_REG         ,0x52000190     @Out endpoint control status
+		.equ	OUT_CSR2_REG         ,0x52000194
+		.equ	OUT_FIFO_CNT1_REG    ,0x52000198     @Endpoint out write count
+		.equ	OUT_FIFO_CNT2_REG    ,0x5200019c
+		.equ	EP0_FIFO             ,0x520001c0     @Endpoint 0 FIFO
+		.equ	EP1_FIFO             ,0x520001c4     @Endpoint 1 FIFO
+		.equ	EP2_FIFO             ,0x520001c8     @Endpoint 2 FIFO
+		.equ	EP3_FIFO             ,0x520001cc     @Endpoint 3 FIFO
+		.equ	EP4_FIFO             ,0x520001d0     @Endpoint 4 FIFO
+		.equ	EP1_DMA_CON          ,0x52000200     @EP1 DMA interface control
+		.equ	EP1_DMA_UNIT         ,0x52000204     @EP1 DMA Tx unit counter
+		.equ	EP1_DMA_FIFO         ,0x52000208     @EP1 DMA Tx FIFO counter
+		.equ	EP1_DMA_TTC_L        ,0x5200020c     @EP1 DMA total Tx counter
+		.equ	EP1_DMA_TTC_M        ,0x52000210
+		.equ	EP1_DMA_TTC_H        ,0x52000214
+		.equ	EP2_DMA_CON          ,0x52000218     @EP2 DMA interface control
+		.equ	EP2_DMA_UNIT         ,0x5200021c     @EP2 DMA Tx unit counter
+		.equ	EP2_DMA_FIFO         ,0x52000220     @EP2 DMA Tx FIFO counter
+		.equ	EP2_DMA_TTC_L        ,0x52000224     @EP2 DMA total Tx counter
+		.equ	EP2_DMA_TTC_M        ,0x52000228
+		.equ	EP2_DMA_TTC_H        ,0x5200022c
+		.equ	EP3_DMA_CON          ,0x52000240     @EP3 DMA interface control
+		.equ	EP3_DMA_UNIT         ,0x52000244     @EP3 DMA Tx unit counter
+		.equ	EP3_DMA_FIFO         ,0x52000248     @EP3 DMA Tx FIFO counter
+		.equ	EP3_DMA_TTC_L        ,0x5200024c     @EP3 DMA total Tx counter
+		.equ	EP3_DMA_TTC_M        ,0x52000250
+		.equ	EP3_DMA_TTC_H        ,0x52000254
+		.equ	EP4_DMA_CON          ,0x52000258     @EP4 DMA interface control
+		.equ	EP4_DMA_UNIT         ,0x5200025c     @EP4 DMA Tx unit counter
+		.equ	EP4_DMA_FIFO         ,0x52000260     @EP4 DMA Tx FIFO counter
+		.equ	EP4_DMA_TTC_L        ,0x52000264     @EP4 DMA total Tx counter
+		.equ	EP4_DMA_TTC_M        ,0x52000268
+		.equ	EP4_DMA_TTC_H        ,0x5200026c
+	.endif
+
+
+@=================
+@ WATCH DOG TIMER
+@=================
+	.equ	WTCON       ,0x53000000       @Watch-dog timer mode
+	.equ	WTDAT       ,0x53000004       @Watch-dog timer data
+	.equ	WTCNT       ,0x53000008       @Eatch-dog timer count
+
+
+@=================
+@ IIC
+@=================
+	.equ	IICCON      ,0x54000000       @IIC control
+	.equ	IICSTAT     ,0x54000004       @IIC status
+	.equ	IICADD      ,0x54000008       @IIC address
+	.equ	IICDS       ,0x5400000c       @IIC data shift
+	.equ	IICVC       ,0x54000010 		 @IIC multi-master line control
+
+
+@=================
+@ IIS
+@=================
+	.equ	IISCON      ,0x55000000       @IIS Control
+	.equ	IISMOD      ,0x55000004       @IIS Mode
+	.equ	IISPSR      ,0x55000008       @IIS Prescaler
+	.equ	IISFCON     ,0x5500000c       @IIS FIFO control
+
+    .ifdef __BIG_ENDIAN
+		.equ	IISFIFO      ,0x55000012       @IIS FIFO entry
+    .else                     @Little Endian
+		.equ	IISFIFO      ,0x55000010       @IIS FIFO entry
+    .endif
+
+
+@=================
+@ I/O PORT 
+@=================
+	.equ	GPACON      ,0x56000000     @Port A control
+	.equ	GPADAT      ,0x56000004     @Port A data
+
+	.equ	GPBCON      ,0x56000010     @Port B control
+	.equ	GPBDAT      ,0x56000014     @Port B data
+	.equ	GPBUP       ,0x56000018     @Pull-up control B
+
+	.equ	GPCCON      ,0x56000020     @Port C control
+	.equ	GPCDAT      ,0x56000024     @Port C data
+	.equ	GPCUP       ,0x56000028     @Pull-up control C
+
+	.equ	GPDCON      ,0x56000030     @Port D control
+	.equ	GPDDAT      ,0x56000034     @Port D data
+	.equ	GPDUP       ,0x56000038     @Pull-up control D
+
+	.equ	GPECON      ,0x56000040     @Port E control
+	.equ	GPEDAT      ,0x56000044     @Port E data
+	.equ	GPEUP       ,0x56000048     @Pull-up control E
+
+	.equ	GPFCON      ,0x56000050     @Port F control
+	.equ	GPFDAT      ,0x56000054     @Port F data
+	.equ	GPFUP       ,0x56000058     @Pull-up control F
+
+	.equ	GPGCON      ,0x56000060     @Port G control
+	.equ	GPGDAT      ,0x56000064     @Port G data
+	.equ	GPGUP       ,0x56000068     @Pull-up control G
+
+	.equ	GPHCON      ,0x56000070     @Port H control
+	.equ	GPHDAT      ,0x56000074     @Port H data
+	.equ	GPHUP       ,0x56000078     @Pull-up control H
+
+	.equ	GPJCON      ,0x560000d0		@Port J control
+	.equ	GPJDAT      ,0x560000d4		@Port J data
+	.equ	GPJUP       ,0x560000d8		@Pull-up control J
+
+	.equ	MISCCR      ,0x56000080     @Miscellaneous control
+	.equ	DCKCON      ,0x56000084     @DCLK0/1 control
+	.equ	EXTINT0     ,0x56000088     @External interrupt control register 0
+	.equ	EXTINT1     ,0x5600008c     @External interrupt control register 1
+	.equ	EXTINT2     ,0x56000090     @External interrupt control register 2
+	.equ	EINTFLT0    ,0x56000094     @Reserved
+	.equ	EINTFLT1    ,0x56000098     @Reserved
+	.equ	EINTFLT2    ,0x5600009c     @External interrupt filter control register 2
+	.equ	EINTFLT3    ,0x560000a0     @External interrupt filter control register 3
+	.equ	EINTMASK    ,0x560000a4     @External interrupt mask
+	.equ	EINTPEND    ,0x560000a8     @External interrupt pending
+	.equ	GSTATUS0    ,0x560000ac     @External pin status
+	.equ	GSTATUS1    ,0x560000b0     @Chip ID(0x32410000)
+	.equ	GSTATUS2    ,0x560000b4     @Reset type
+	.equ	GSTATUS3    ,0x560000b8     @Saved data0(32-bit) before entering POWER_OFF mode 
+	.equ	GSTATUS4    ,0x560000bc     @Saved data1(32-bit) before entering POWER_OFF mode
+
+
+@=================
+@ RTC
+@=================
+    .ifdef __BIG_ENDIAN
+		.equ	RTCCON      ,0x57000043       @RTC control
+		.equ	TICNT       ,0x57000047       @Tick time count
+		.equ	RTCALM      ,0x57000053       @RTC alarm control
+		.equ	ALMSEC      ,0x57000057       @Alarm second
+		.equ	ALMMIN      ,0x5700005b       @Alarm minute
+		.equ	ALMHOUR     ,0x5700005f       @Alarm Hour
+		.equ	ALMDAY      ,0x57000063       @Alarm day
+		.equ	ALMMON      ,0x57000067       @Alarm month
+		.equ	ALMYEAR     ,0x5700006b       @Alarm year
+		.equ	BCDSEC      ,0x57000073       @BCD second
+		.equ	BCDMIN      ,0x57000077       @BCD minute
+		.equ	BCDHOUR     ,0x5700007b       @BCD hour
+		.equ	BCDDAY      ,0x5700007f       @BCD day
+		.equ	BCDDATE     ,0x57000083       @BCD date
+		.equ	BCDMON      ,0x57000087       @BCD month
+		.equ	BCDYEAR     ,0x5700008b       @BCD year
+
+    .else                       @Little Endian
+		.equ	RTCCON      ,0x57000040       @RTC control
+		.equ	TICNT       ,0x57000044       @Tick time count
+		.equ	RTCALM      ,0x57000050       @RTC alarm control
+		.equ	ALMSEC      ,0x57000054       @Alarm second
+		.equ	ALMMIN      ,0x57000058       @Alarm minute
+		.equ	ALMHOUR     ,0x5700005c       @Alarm Hour
+		.equ	ALMDAY      ,0x57000060       @Alarm day
+		.equ	ALMMON      ,0x57000064       @Alarm month
+		.equ	ALMYEAR     ,0x57000068       @Alarm year
+		.equ	BCDSEC      ,0x57000070       @BCD second
+		.equ	BCDMIN      ,0x57000074       @BCD minute
+		.equ	BCDHOUR     ,0x57000078       @BCD hour
+		.equ	BCDDAY      ,0x5700007c       @BCD day
+		.equ	BCDDATE     ,0x57000080       @BCD date
+		.equ	BCDMON      ,0x57000084       @BCD month
+		.equ	BCDYEAR     ,0x57000088       @BCD year
+    .endif                      @RTC
+
+
+@=================
+@ ADC
+@=================
+	.equ	ADCCON        ,0x58000000     @ADC control
+	.equ	ADCTSC        ,0x58000004     @ADC touch screen control
+	.equ	ADCDLY        ,0x58000008     @ADC start or Interval Delay
+	.equ	ADCDAT0       ,0x5800000c     @ADC conversion data 0
+	.equ	ADCDAT1       ,0x58000010     @ADC conversion data 1                     
+	.equ	ADCUPDN       ,0x58000014	  @Stylus up or down interrupt status
+
+
+@=================                      
+@ SPI           
+@=================
+	.equ	SPCON0        ,0x59000000     @SPI0 control
+	.equ	SPSTA0        ,0x59000004     @SPI0 status
+	.equ	SPPIN0        ,0x59000008     @SPI0 pin control
+	.equ	SPPRE0        ,0x5900000c     @SPI0 baud rate prescaler
+	.equ	SPTDAT0       ,0x59000010     @SPI0 Tx data
+	.equ	SPRDAT0       ,0x59000014     @SPI0 Rx data
+	
+	.equ	SPCON1        ,0x59000020     @SPI1 control
+	.equ	SPSTA1        ,0x59000024     @SPI1 status
+	.equ	SPPIN1        ,0x59000028     @SPI1 pin control
+	.equ	SPPRE1        ,0x5900002c     @SPI1 baud rate prescaler
+	.equ	SPTDAT1       ,0x59000030     @SPI1 Tx data
+	.equ	SPRDAT1       ,0x59000034     @SPI1 Rx data
+
+
+@=================
+@ SD Interface
+@=================
+	.equ	SDICON        ,0x5a000000     @SDI control
+	.equ	SDIPRE        ,0x5a000004     @SDI baud rate prescaler
+	.equ	SDICmdArg     ,0x5a000008     @SDI command argument
+	.equ	SDICmdCon     ,0x5a00000c     @SDI command control
+	.equ	SDICmdSta     ,0x5a000010     @SDI command status
+	.equ	SDIRSP0       ,0x5a000014     @SDI response 0
+	.equ	SDIRSP1       ,0x5a000018     @SDI response 1
+	.equ	SDIRSP2       ,0x5a00001c     @SDI response 2
+	.equ	SDIRSP3       ,0x5a000020     @SDI response 3
+	.equ	SDIDTimer     ,0x5a000024     @SDI data/busy timer
+	.equ	SDIBSize      ,0x5a000028     @SDI block size
+	.equ	SDIDatCon     ,0x5a00002c     @SDI data control
+	.equ	SDIDatCnt     ,0x5a000030     @SDI data remain counter
+	.equ	SDIDatSta     ,0x5a000034     @SDI data status
+	.equ	SDIFSTA       ,0x5a000038     @SDI FIFO status
+	.equ	SDIIMSK       ,0x5a00003c     @SDI interrupt mask
+
+    .ifdef __BIG_ENDIAN
+		.equ	SDIDAT        ,0x5a000043     @SDI data
+    .else                       @Little Endian
+		.equ	SDIDAT        ,0x5a000040     @SDI data
+    .endif                      @SD Interface
+
+
+@=================
+@ AC97 Audio-CODEC Interface
+@=================   
+	.equ	AC_GLBCTRL	     ,0x5b000000	@AC97 global control register
+	.equ	AC_GLBSTAT	     ,0x5b000004	@AC97 global status register
+	.equ	AC_CODEC_CMD     ,0x5b000008	@AC97 codec command register
+	.equ	AC_CODEC_STAT    ,0x5b00000c	@AC97 codec status register
+	.equ	AC_PCMADDR	     ,0x5b000010	@AC97 PCM out/in channel FIFO address register
+	.equ	AC_MICADDR	     ,0x5b000014	@AC97 mic in channel FIFO address register
+	.equ	AC_PCMDATA       ,0x5b000018	@AC97 PCM out/in channel FIFO data register
+	.equ	AC_MICDATA	     ,0x5b00001c	@AC97 MIC in channel FIFO data register
+
+
+@=================
+@ ISR
+@=================
+	.equ	ISR_RESET        ,(ISR_BADDR+0x0)
+	.equ	ISR_UNDEF        ,(ISR_BADDR+0x4)
+	.equ	ISR_SWI          ,(ISR_BADDR+0x8)
+	.equ	ISR_PABORT       ,(ISR_BADDR+0xc)
+	.equ	ISR_DABORT       ,(ISR_BADDR+0x10)
+	.equ	ISR_RESERVED     ,(ISR_BADDR+0x14)
+	.equ	ISR_IRQ          ,(ISR_BADDR+0x18)
+	.equ	ISR_FIQ          ,(ISR_BADDR+0x1c)
+
+	.equ	ISR_EINT0        ,(ISR_BADDR+0x20)
+	.equ	ISR_EINT1        ,(ISR_BADDR+0x24)
+	.equ	ISR_EINT2        ,(ISR_BADDR+0x28)
+	.equ	ISR_EINT3        ,(ISR_BADDR+0x2c)
+	.equ	ISR_EINT4_7      ,(ISR_BADDR+0x30)
+	.equ	ISR_EINT8_23     ,(ISR_BADDR+0x34)
+	.equ	ISR_CAM	     	 ,(ISR_BADDR+0x38)
+	.equ	ISR_BAT_FLT      ,(ISR_BADDR+0x3c)
+	.equ	ISR_TICK         ,(ISR_BADDR+0x40)
+	.equ	ISR_WDT_AC97     ,(ISR_BADDR+0x44)
+	.equ	ISR_TIMER0       ,(ISR_BADDR+0x48)
+	.equ	ISR_TIMER1       ,(ISR_BADDR+0x4c)
+	.equ	ISR_TIMER2       ,(ISR_BADDR+0x50)
+	.equ	ISR_TIMER3       ,(ISR_BADDR+0x54)
+	.equ	ISR_TIMER4       ,(ISR_BADDR+0x58)
+	.equ	ISR_UART2        ,(ISR_BADDR+0x5c)
+	.equ	ISR_LCD          ,(ISR_BADDR+0x60)
+	.equ	ISR_DMA0         ,(ISR_BADDR+0x64)
+	.equ	ISR_DMA1         ,(ISR_BADDR+0x68)
+	.equ	ISR_DMA2         ,(ISR_BADDR+0x6c)
+	.equ	ISR_DMA3         ,(ISR_BADDR+0x70)
+	.equ	ISR_SDI          ,(ISR_BADDR+0x74)
+	.equ	ISR_SPI0         ,(ISR_BADDR+0x78)
+	.equ	ISR_UART1        ,(ISR_BADDR+0x7c)
+	.equ	ISR_NFCON	     ,(ISR_BADDR+0x80)
+  	.equ	ISR_USBD         ,(ISR_BADDR+0x84)
+  	.equ	ISR_USBH         ,(ISR_BADDR+0x88)
+  	.equ	ISR_IIC          ,(ISR_BADDR+0x8c)
+  	.equ	ISR_UART0        ,(ISR_BADDR+0x90)
+  	.equ	ISR_SPI1         ,(ISR_BADDR+0x94)
+  	.equ	ISR_RTC          ,(ISR_BADDR+0x98)
+  	.equ	ISR_ADC          ,(ISR_BADDR+0xa0)
+ 
+
+@=================
+@ PENDING BIT
+@=================
+	.equ	BIT_EINT0       ,(0x1)
+	.equ	BIT_EINT1       ,(0x1<<1)
+	.equ	BIT_EINT2       ,(0x1<<2)
+	.equ	BIT_EINT3       ,(0x1<<3)
+	.equ	BIT_EINT4_7     ,(0x1<<4)
+	.equ	BIT_EINT8_23    ,(0x1<<5)
+	.equ	BIT_CAM		    ,(0x1<<6)
+	.equ	BIT_BAT_FLT     ,(0x1<<7)
+	.equ	BIT_TICK        ,(0x1<<8)
+	.equ	BIT_WDT_AC97    ,(0x1<<9)
+	.equ	BIT_TIMER0      ,(0x1<<10)
+	.equ	BIT_TIMER1      ,(0x1<<11)
+	.equ	BIT_TIMER2      ,(0x1<<12)
+	.equ	BIT_TIMER3      ,(0x1<<13)
+	.equ	BIT_TIMER4      ,(0x1<<14)
+	.equ	BIT_UART2       ,(0x1<<15)
+	.equ	BIT_LCD         ,(0x1<<16)
+	.equ	BIT_DMA0        ,(0x1<<17)
+	.equ	BIT_DMA1        ,(0x1<<18)
+	.equ	BIT_DMA2        ,(0x1<<19)
+	.equ	BIT_DMA3        ,(0x1<<20)
+	.equ	BIT_SDI         ,(0x1<<21)
+	.equ	BIT_SPI0        ,(0x1<<22)
+	.equ	BIT_UART1       ,(0x1<<23)
+	.equ	BIT_NFCON 	    ,(0x1<<24)
+	.equ	BIT_USBD        ,(0x1<<25)
+	.equ	BIT_USBH        ,(0x1<<26)
+	.equ	BIT_IIC         ,(0x1<<27)
+	.equ	BIT_UART0       ,(0x1<<28)
+	.equ	BIT_SPI1        ,(0x1<<29)
+	.equ	BIT_RTC         ,(0x1<<30)
+	.equ	BIT_ADC         ,(0x1<<31)
+	.equ	BIT_ALLMSK      ,(0xffffffff)
+
+	.equ	BIT_SUB_ALLMSK  ,(0x7ff)
+	.equ	BIT_SUB_AC97    ,(0x1<<14)
+	.equ	BIT_SUB_WDT	    ,(0x1<<13)
+	.equ	BIT_SUB_CAM_P   ,(0x1<<12)
+	.equ	BIT_SUB_CAM_C   ,(0x1<<11)
+	.equ	BIT_SUB_ADC_S   ,(0x1<<10)
+	.equ	BIT_SUB_TC      ,(0x1<<9)
+	.equ	BIT_SUB_ERR2    ,(0x1<<8)
+	.equ	BIT_SUB_TXD2    ,(0x1<<7)
+	.equ	BIT_SUB_RXD2    ,(0x1<<6)
+	.equ	BIT_SUB_ERR1    ,(0x1<<5)
+	.equ	BIT_SUB_TXD1    ,(0x1<<4)
+	.equ	BIT_SUB_RXD1    ,(0x1<<3)
+	.equ	BIT_SUB_ERR0    ,(0x1<<2)
+	.equ	BIT_SUB_TXD0    ,(0x1<<1)
+	.equ	BIT_SUB_RXD0    ,(0x1<<0)
+
+	.equ	USERMODE        ,0x10
+	.equ	FIQMODE         ,0x11
+	.equ	IRQMODE         ,0x12
+	.equ	SVCMODE         ,0x13
+	.equ	ABORTMODE       ,0x17
+	.equ	UNDEFMODE       ,0x1b
+	.equ	MODEMASK        ,0x1f
+	.equ	NOINT           ,0xc0
+
+@
+@*****************************************************************************
+@
