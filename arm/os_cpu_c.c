@@ -262,8 +262,20 @@ void  OSTCBInitHook (OS_TCB *ptcb)
 *********************************************************************************************************
 */
 #if (OS_CPU_HOOKS_EN > 0) && (OS_TIME_TICK_HOOK_EN > 0)
+
+#if (OS_TMR_EN > 0)
+static  INT16U  OSTmrCtr;
+#endif
+
 void  OSTimeTickHook (void)
 {
+#if OS_TMR_EN > 0
+	OSTmrCtr++;
+	if (OSTmrCtr >= (OS_TICKS_PER_SEC / OS_TMR_CFG_TICKS_PER_SEC)) {
+		OSTmrCtr = 0;
+		OSTmrSignal();
+	}
+#endif	
 }
 #endif
 
