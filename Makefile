@@ -14,7 +14,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
 export AS LD CC CPP AR NM
 export STRIP OBJCOPY OBJDUMP
 
-CFLAGS := -Wall -O2 -g -march=armv4 -fno-stack-protector
+CFLAGS := -Wall -O2 -g -march=armv4 -fno-stack-protector -nostdinc -nostdlib -fno-builtin
 CFLAGS += -I $(TOPDIR)/s3c2440 -I $(TOPDIR)/arm -I $(TOPDIR)/source -I $(TOPDIR)/app -I $(TOPDIR)/lib
 export CFLAGS
 

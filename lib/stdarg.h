@@ -2,7 +2,7 @@
 *                                                                         *
 *   PROJECT     : ARM port for UCOS-II                                    *
 *                                                                         *
-*   MODULE      : PRINTF.h                                              *
+*   MODULE      : STDARG.h                                                *
 *                                                                         *
 *	AUTHOR		: HanRunyu												  *
 *				  URL  : http://github.com/HanRunyu 					  *
@@ -12,24 +12,16 @@
 *	TOOLCHAIN	: arm-linux-gnueabi-gcc(Linaro 7.5.0)					  *
 *                                                                         *
 *   DESCRIPTION :                                                         *
-*   printf function group.                                                *
+*   stdarg.                                                               *
 *                                                                         *
 **************************************************************************/
 
 
 
-#include "stdarg.h"
+typedef char *  va_list;
 
-#define CONFIG_SYS_PBSIZE		1024
+#define _INTSIZEOF(n)   ( (sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1) )
 
-/* ********************************************************************* */
-/* Interface function definition */
-
-int vsnprintf(char *buf, U32 size, const char *fmt, va_list args);
-int vscnprintf(char *buf, U32 size, const char *fmt, va_list args);
-int snprintf(char *buf, U32 size, const char *fmt, ...);
-int scnprintf(char *buf, U32 size, const char *fmt, ...);
-int vsprintf(char *buf, const char *fmt, va_list args);
-int sprintf(char *buf, const char *fmt, ...);
-int printf(const char *fmt, ...);
-int vprintf(const char *fmt, va_list args);
+#define va_start(ap,v)  ( ap = (va_list)&v + _INTSIZEOF(v) )
+#define va_arg(ap,t)    ( *(t *)( ap=ap + _INTSIZEOF(t), ap- _INTSIZEOF(t)) )
+#define va_end(ap)      ( ap = (va_list)0 )
