@@ -3,4 +3,4 @@
 使用交叉编译工具链arm-linux-gnueabi-gcc(Linaro 7.5.0)   
 
 注意：   
-app目录下包含两个app测试应用，切换时修改app/Makefile
+app目录下包含多个app测试应用，切换时修改app/Makefile
