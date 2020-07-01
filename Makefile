@@ -1,4 +1,4 @@
-CROSS_COMPILE = arm-linux-gnueabi-
+CROSS_COMPILE = arm-s3c2440-linux-gnueabi-
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld

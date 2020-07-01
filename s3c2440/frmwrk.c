@@ -9,7 +9,7 @@
 *																		  *
 *	PROCESSOR	: s3c2440  (32 bit ARM920T RISC core from Samsung)		  *
 *																		  *
-*	TOOLCHAIN	: arm-linux-gnueabi-gcc(Linaro 7.5.0)					  *
+*   TOOLCHAIN   : gcc version 8.3.0 (crosstool-NG 1.24.0)                 *
 *																		  *
 *	DESCRIPTION :														  *
 *	This is the Framework module. Creates an operating infrastructure. 	  *
@@ -133,7 +133,7 @@ static void __vLogo(void)
 	CONSOL_Printf("\n\nUCOS_FRAMEWORK Ver %s for %s :%s\n",
 				   __mVer,__mProcessor,__mDate);
 	CONSOL_Printf("Built using %s on %s   <%s>\n\n",
-				   "arm-linux-gnueabi-gcc 7.5.0"
+				   "gcc version 8.3.0 (crosstool-NG 1.24.0)"
 				   ,__DATE__,__TIME__);
 	CONSOL_Printf("Endian: %s\n",
 #ifdef __BIG_ENDIAN

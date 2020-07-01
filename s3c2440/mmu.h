@@ -9,7 +9,7 @@
 *																		  *
 *	PROCESSOR	: s3c2440  (32 bit ARM920T RISC core from Samsung)		  *
 *																		  *
-*	TOOLCHAIN	: arm-linux-gnueabi-gcc(Linaro 7.5.0)					  *
+*   TOOLCHAIN   : gcc version 8.3.0 (crosstool-NG 1.24.0)                 *
 *                                                                         *
 *   DESCRIPTION :                                                         *
 *   External interface & Module configuration header for MMU module.      *

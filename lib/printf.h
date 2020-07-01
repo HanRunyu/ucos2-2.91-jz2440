@@ -2,14 +2,14 @@
 *                                                                         *
 *   PROJECT     : ARM port for UCOS-II                                    *
 *                                                                         *
-*   MODULE      : PRINTF.h                                              *
+*   MODULE      : PRINTF.h                                                *
 *                                                                         *
 *	AUTHOR		: HanRunyu												  *
 *				  URL  : http://github.com/HanRunyu 					  *
 *																		  *
 *	PROCESSOR	: s3c2440  (32 bit ARM920T RISC core from Samsung)		  *
 *																		  *
-*	TOOLCHAIN	: arm-linux-gnueabi-gcc(Linaro 7.5.0)					  *
+*	TOOLCHAIN	: gcc version 8.3.0 (crosstool-NG 1.24.0)				  *
 *                                                                         *
 *   DESCRIPTION :                                                         *
 *   printf function group.                                                *
